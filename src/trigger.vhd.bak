@@ -1,0 +1,37 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+use IEEE.numeric_std.all;  
+
+
+entity trigger is
+port(
+	clk : in std_logic;
+	trigger : out std_logic
+);
+end entity trigger;
+
+architecture arcTrigger of trigger is 
+signal Time_Counter : unsigned(20 downto 0) :="000000000000000000000";
+signal Time_Counter2 : unsigned(20 downto 0) :="000000000000000000000";
+signal subTrigger : std_logic;
+signal booleanvalue : std_logic := '0';
+begin
+trigger <= subTrigger;
+ETI_PROCESS : process(clk)
+begin
+if rising_edge(clk) then
+Time_Counter <= Time_Counter + 1;
+end if; 
+if (Time_Counter = "101111010011010110000" and booleanvalue = '0') then -- 2500 * 20ns = 50 us
+subTrigger <= '1';
+Time_Counter <= "000000000000000000000";
+booleanvalue <= '1';
+end if;
+if (Time_Counter = "000000000000111110100" and booleanvalue = '1') then 
+subTrigger <= '0'; --500 * 20ns = 10 us
+Time_Counter <= "000000000000000000000";
+booleanvalue <= '0';
+end if;
+
+end process;
+end architecture arcTrigger;

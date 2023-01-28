@@ -1,0 +1,27 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity TestBench_MesureDistance is
+end entity;
+
+architecture arcTBclock of TestBench_MesureDistance is
+signal Echo_Pulse_Time : unsigned(15 downto 0);
+signal echo_pulse_state : std_logic;
+signal distance : integer;
+
+begin
+etiquette : entity work.MesureDistance port map(distance_object => distance );
+ETProcess1 : process
+	begin
+		echo_pulse_state <= '1';
+		Echo_Pulse_Time <= "0011101010011000"; -- devrait renvoyer 258cm
+		wait for 50us;
+		echo_pulse_state <= '0';
+		Echo_Pulse_Time <= "0010111011100000";
+		wait for 50us;
+		echo_pulse_state <= '1';
+		Echo_Pulse_Time <= "0000011111010000"; -- devrait renvoyer 34cm 
+		wait for 50us;
+	end process;
+end architecture;
